@@ -1,0 +1,97 @@
+REGISTRO — budget mensile
+=========================
+
+Questa cartella contiene tutta l'app. Serve una sola cosa: metterla online
+a un indirizzo tuo, così il telefono può installarla nella schermata Home.
+Ci vogliono due minuti e non costa niente.
+
+Perché serve un indirizzo web? Perché iPhone e Android permettono di
+aggiungere alla Home solo le pagine che arrivano da https://, mai i file
+aperti dalla cartella Download. È l'unico passaggio obbligato.
+
+
+PASSO 1 — Metti l'app online
+----------------------------
+Il modo più veloce, senza registrarsi:
+
+  1. Da computer, apri  https://app.netlify.com/drop
+  2. Trascina il file  Registro-app.zip  dentro il riquadro.
+  3. Aspetta qualche secondo. Ti dà un indirizzo tipo
+     https://qualcosa-di-casuale.netlify.app
+  4. Copia quell'indirizzo e mandatelo sul telefono (email, WhatsApp, note).
+
+Alternative equivalenti: GitHub Pages, Cloudflare Pages, Vercel.
+Se hai già un tuo sito, carica i file in una sottocartella e usa quel link.
+
+
+PASSO 2 — Aggiungila alla schermata Home
+-----------------------------------------
+iPhone (Safari — deve essere Safari, non Chrome):
+  Apri l'indirizzo → tasto Condividi (il quadrato con la freccia)
+  → "Aggiungi a Home" → Aggiungi.
+
+Android (Chrome):
+  Apri l'indirizzo → menu ⋮ in alto a destra
+  → "Installa app" oppure "Aggiungi a schermata Home".
+
+Ora hai l'icona insieme alle altre app. Si apre a schermo intero,
+senza barra del browser, e funziona anche in aereo o senza campo.
+
+
+DOVE FINISCONO I DATI
+---------------------
+In due posti, tutti e due tuoi.
+
+1) Dentro l'app, sul telefono. È la copia di lavoro: si aggiorna da sola
+   a ogni movimento che aggiungi.
+
+2) In un file Registro.xlsx, dove decidi tu. È la copia che resta anche
+   se cancelli l'app o cambi telefono.
+
+Non c'è nessun server, nessun account, nessuna connessione verso l'esterno:
+i caratteri tipografici sono incorporati nell'app, quindi una volta installata
+non contatta più niente e nessuno. Nemmeno chi ospita il file vede i tuoi numeri.
+
+
+IL TASTO SALVA
+--------------
+In alto a destra c'è il tasto Salva. Diventa giallo quando ci sono modifiche
+non ancora scritte sul file, e torna grigio quando è tutto a posto.
+
+La prima volta ti chiede dove creare Registro.xlsx. Da lì in avanti riscrive
+sempre quello: un solo file, aggiornato, mai copie sparse.
+
+  • Android (Chrome) e computer: scegli la cartella una volta sola.
+    Poi l'app salva da sola pochi secondi dopo ogni modifica.
+
+  • iPhone: Safari non permette di riscrivere un file in automatico.
+    "Salva" apre il pannello Condividi: scegli "Salva su File", vai nella
+    stessa cartella di sempre e conferma con "Sostituisci". Il file resta uno.
+
+Il Registro.xlsx è un vero foglio di calcolo: lo apri con Excel, Numbers o
+Fogli Google e trovi il riepilogo dell'anno e tutti i movimenti. Contiene
+anche un foglio nascosto "_dati" — non cancellarlo: è quello che permette
+all'app di rileggere tutto con "Apri un file". Puoi modificare il file in
+Excel e riaprirlo nell'app: funziona lo stesso.
+
+In Impostazioni → I tuoi dati trovi anche:
+  • Cambia file — per spostare il salvataggio altrove
+  • Apri un file — per ripartire da un Registro.xlsx salvato prima
+  • Esporta il mese in CSV
+  • Copia di sicurezza (.json) — un secondo formato, per sicurezza
+
+
+SE MODIFICHI L'APP
+------------------
+Cambia il numero di versione in sw.js (riga: var CACHE = "registro-v1")
+e ricarica online la cartella, altrimenti il telefono continua a mostrare
+la copia vecchia che si è salvato.
+
+
+COSA C'È DENTRO
+---------------
+  index.html               l'app intera (schermate, calcoli, grafici)
+  manifest.webmanifest     nome, icona e colori per la schermata Home
+  sw.js                    la copia locale che fa funzionare tutto offline
+  icon-*.png               le icone
+  LEGGIMI.txt              questo file
