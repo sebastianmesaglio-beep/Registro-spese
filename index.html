@@ -222,6 +222,37 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   background:var(--ink);color:#fff;padding:11px 18px;border-radius:11px;font-size:13.5px;font-weight:500;
   opacity:0;pointer-events:none;transition:.25s;max-width:88vw;text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+.grow{display:grid;grid-template-columns:1fr 108px 30px;gap:8px;align-items:center;
+  padding:9px 0;border-top:1px solid var(--rule)}
+.grow:first-child{border-top:0}
+.grow .gn{font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grow input{padding:8px 9px;font-size:15px;text-align:right;font-family:var(--mono)}
+.newin{margin-top:8px}
+.hero{background:var(--ink);color:#fff;border-radius:var(--r);padding:16px;margin-bottom:12px}
+.hero .eyebrow{color:#9FB3C8}
+.hero .g-big{margin:4px 0 0}
+.pdelta{font-size:13px;color:#9FB3C8;margin-top:4px}
+.pdelta b{font-family:var(--mono);font-weight:500}
+.pdelta b.up{color:#5FD3A0}.pdelta b.dn{color:#FF9A92}
+.spark{margin:14px -4px 0;height:132px}
+.spark svg{width:100%;height:132px;display:block}
+.spark .msg{height:132px;display:grid;place-items:center;color:#7A8EA8;font-size:13px;text-align:center;padding:0 20px}
+.pfoot{margin-top:12px;padding-top:11px;border-top:1px solid rgba(255,255,255,.13);
+  font-size:12.5px;color:#C6D4E2;display:flex;flex-wrap:wrap;gap:4px 16px}
+.pfoot b{font-family:var(--mono);font-weight:500;color:#fff}
+.pfoot b.up{color:#5FD3A0}.pfoot b.dn{color:#FF9A92}
+.arow{display:flex;align-items:center;gap:10px;padding:11px 14px;border-top:1px solid var(--rule)}
+.arow:first-child{border-top:0}
+.arow .ic{width:34px;height:34px;border-radius:11px;flex:none;display:grid;place-items:center;
+  color:#fff;font-size:13px;font-weight:700;font-family:var(--mono)}
+.arow .main{flex:1;min-width:0}
+.arow .main .a{font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arow .main .b{font-size:11.5px;color:var(--mute)}
+.arow .r{text-align:right;flex:none}
+.arow .r .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:14.5px;font-weight:500}
+.arow .r .d{font-family:var(--mono);font-size:11px;margin-top:1px}
+.arow .r .d.up{color:var(--risparmio)}.arow .r .d.dn{color:var(--allerta)}
+.arow .r .d.flat{color:var(--mute)}
 .savebtn{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:10px;
   background:rgba(255,255,255,.10);color:#C6D4E2;font-size:12.5px;font-weight:600}
 .savebtn:active{background:rgba(255,255,255,.2)}
@@ -321,15 +352,41 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <div class="card"><div class="rows" id="risList"></div></div>
   </section>
 
-  <!-- ============ ANNO ============ -->
-  <section class="view" id="v-anno">
-    <div class="card">
-      <h2 id="yTitle">Anno</h2>
-      <div id="yearList"></div>
+  <!-- ============ PATRIMONIO + ANNO ============ -->
+  <section class="view" id="v-pat">
+    <div class="seg-ctl" id="patTabs">
+      <button data-p="pat" aria-pressed="true">Patrimonio</button>
+      <button data-p="anno" aria-pressed="false">Flusso dell'anno</button>
     </div>
-    <div class="card">
-      <h2>Totali dell'anno</h2>
-      <div class="rows" id="yearTot"></div>
+
+    <div id="patBody">
+      <div class="hero">
+        <div class="eyebrow">Patrimonio totale</div>
+        <div class="g-big num" id="pTot">\u20ac 0,00</div>
+        <div class="pdelta" id="pDelta"></div>
+        <div class="spark" id="pChart"></div>
+        <div class="pfoot" id="pFoot"></div>
+      </div>
+      <div class="card">
+        <h2>Per categoria</h2>
+        <div id="pCats"></div>
+      </div>
+      <div class="card">
+        <h2>I tuoi asset</h2>
+        <div class="rows" id="pAssets"></div>
+      </div>
+      <p class="hint" id="pHint" style="margin:0 2px 8px"></p>
+    </div>
+
+    <div id="annoBody" hidden>
+      <div class="card">
+        <h2 id="yTitle">Anno</h2>
+        <div id="yearList"></div>
+      </div>
+      <div class="card">
+        <h2>Totali dell'anno</h2>
+        <div class="rows" id="yearTot"></div>
+      </div>
     </div>
   </section>
 
@@ -347,9 +404,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     </div>
 
     <div class="card">
-      <h2>Il tuo obiettivo</h2>
-      <label class="f"><span>Come si chiama</span><input id="sGoalN" placeholder="Viaggio in Sardegna"></label>
-      <label class="f" style="margin-bottom:0"><span>Quanto ti serve (€)</span><input id="sGoalA" class="num" inputmode="decimal" placeholder="1300"></label>
+      <h2>Obiettivi di risparmio</h2>
+      <div id="goalList"></div>
+      <div class="addline" style="margin-top:12px"><input id="iGoalN" placeholder="Es. Vacanze, Anticipo mutuo"><button data-addgoal="1">Aggiungi</button></div>
+      <input id="iGoalA" class="num" inputmode="decimal" placeholder="Quanto ti serve \u20ac" style="margin-top:8px">
+      <p class="hint">Ogni obiettivo compare nella schermata Mese e nel menu quando registri un risparmio.</p>
     </div>
 
     <div class="card"><h2>Categorie di spesa</h2><div class="chips" id="cCat"></div>
@@ -398,7 +457,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   <button data-v="mese" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 4 4-6 5 5"/><path d="M3 21h18"/></svg>Mese</button>
   <button data-v="mov"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Movimenti</button>
   <button data-v="fisse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-4-2-3 2-3-2-4 2z"/><path d="M9 8h6M9 12h6"/></svg>Fisse</button>
-  <button data-v="anno"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>Anno</button>
+  <button data-v="pat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Patrimonio</button>
   <button data-v="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1"/></svg>Impostazioni</button>
 </nav>
 
@@ -414,6 +473,18 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   </div>
   <div id="formBody"></div>
   <button class="btn" id="saveMov" style="margin-top:6px">Aggiungi</button>
+</div>
+
+<div class="sheet" id="asheet" role="dialog" aria-modal="true" aria-label="Asset">
+  <div class="grab"></div>
+  <h3 id="aTitle">Nuovo asset</h3>
+  <label class="f"><span>Nome</span><input id="aName" placeholder="Es. Conto deposito, ETF World"></label>
+  <label class="f"><span>Tipo</span><select id="aCat"></select></label>
+  <label class="f"><span>Quanto vale oggi</span><input id="aVal" class="money num" inputmode="decimal" placeholder="0,00"></label>
+  <label class="f"><span>Quanto ci hai messo in tutto</span><input id="aVers" class="num" inputmode="decimal" placeholder="lascia vuoto se non lo sai"></label>
+  <p class="hint" id="aHist" style="margin-top:0"></p>
+  <button class="btn" id="aSave">Salva</button>
+  <button class="btn danger" id="aDel" style="margin-top:10px">Elimina questo asset</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -438,15 +509,16 @@ function persist(o){
 var DEFAULTS = {
   settings:{
     nome:"", frase:"La costanza è la chiave del successo.",
-    emergenza:4000, obiettivoNome:"Viaggio", obiettivoImporto:1300,
+    emergenza:4000, obiettivi:[],
     categorie:["Spesa","Trasporti","Salute e benessere","Svago","Shopping","Palestra","Ristoranti","Casa","Abbonamenti","Altro"],
     modalita:["Contanti","Bancomat","Carta di credito","Bonifico","Satispay"],
     fonti:["Stipendio","Freelance","Rimborsi","Regali","Interessi","Altro"],
-    asset:["Riserva d'emergenza","Obiettivo","ETF","Azioni","Altro"],
+    asset:["Riserva d'emergenza","Conto deposito","ETF","Azioni","Altro"],
     bollette:[{nome:"Affitto/Mutuo",media:550},{nome:"Luce",media:60},{nome:"Gas",media:45},
               {nome:"Acqua",media:25},{nome:"Internet",media:30},{nome:"Telefono",media:15}]
   },
-  months:{}
+  months:{},
+  patrimonio:{assets:[]}
 };
 
 var db = load();
@@ -455,6 +527,19 @@ if(!db || !db.settings){ db = JSON.parse(JSON.stringify(DEFAULTS)); persist(db);
 (function(){ var d=DEFAULTS.settings, s=db.settings, k;
   for(k in d){ if(s[k]===undefined) s[k]=JSON.parse(JSON.stringify(d[k])); }
   if(!db.months) db.months={};
+  if(!db.patrimonio || !db.patrimonio.assets) db.patrimonio={assets:[]};
+  if(s.obiettivoNome!==undefined){
+    if(!s.obiettivi) s.obiettivi=[];
+    if(s.obiettivoNome) s.obiettivi.push({nome:s.obiettivoNome, importo:+s.obiettivoImporto||0});
+    if(s.obiettivoNome){
+      var mk, mb, mi, nm=s.obiettivoNome;
+      for(mk in db.months){ mb=db.months[mk].riserva||[];
+        for(mi=0;mi<mb.length;mi++) if(mb[mi].categoria==="Obiettivo") mb[mi].categoria=nm; }
+      var oi=s.asset.indexOf("Obiettivo"); if(oi>=0) s.asset.splice(oi,1);
+    }
+    delete s.obiettivoNome; delete s.obiettivoImporto;
+    persist(db);
+  }
 })();
 function save(){ persist(db); markDirty(); }
 
@@ -581,10 +666,10 @@ function delta(id, now, prev, moreIsGood){
 
 function renderGoals(){
   var s=db.settings, out="";
-  var pairs=[
-    {t:"Riserva d'emergenza", g:+s.emergenza||0, v:cumulato(cur.y,cur.m,"Riserva d'emergenza"), c:""},
-    {t:s.obiettivoNome||"Obiettivo", g:+s.obiettivoImporto||0, v:cumulato(cur.y,cur.m,"Obiettivo"), c:"ocra"}
-  ];
+  var pairs=[{t:"Riserva d'emergenza", g:+s.emergenza||0, v:cumulato(cur.y,cur.m,"Riserva d'emergenza"), c:""}];
+  var G=s.obiettivi||[];
+  for(var gi=0;gi<G.length;gi++)
+    pairs.push({t:G[gi].nome, g:+G[gi].importo||0, v:cumulato(cur.y,cur.m,G[gi].nome), c:"ocra"});
   for(var i=0;i<pairs.length;i++){
     var q=pairs[i], p=pct(q.v,q.g);
     out+='<div class="goal"><div class="goal-h"><div class="t">'+esc(q.t)+'</div>'+
@@ -592,6 +677,8 @@ function renderGoals(){
          '<div class="track"><div class="fill '+q.c+'" style="width:'+p+'%"></div></div>'+
          '<div class="goal-f"><span>'+eur(q.v)+' da parte</span><span>mancano '+eur(Math.max(q.g-q.v,0))+'</span></div></div>';
   }
+  if((s.obiettivi||[]).length===0)
+    out+='<p class="hint" style="margin:12px 0 0">Aggiungi i tuoi obiettivi dalle impostazioni: vacanze, anticipo mutuo, auto\u2026</p>';
   $("goals").innerHTML = out;
 }
 
@@ -736,8 +823,7 @@ function renderSet(){
   $("sName").value = s.nome||"";
   $("sPhrase").value = s.frase||"";
   $("sEmg").value = s.emergenza||"";
-  $("sGoalN").value = s.obiettivoNome||"";
-  $("sGoalA").value = s.obiettivoImporto||"";
+  renderGoalList();
   chips("cCat","categorie"); chips("cMod","modalita");
   chips("cFon","fonti"); chips("cAst","asset");
   var out="", i;
@@ -750,6 +836,18 @@ function renderSet(){
   $("cBoll").innerHTML=out;
   renderStorage();
 }
+function renderGoalList(){
+  var G=db.settings.obiettivi||[], out="", i;
+  for(i=0;i<G.length;i++){
+    out+='<div class="grow"><div class="gn">'+esc(G[i].nome)+'</div>'+
+      '<input class="num" inputmode="decimal" data-gi="'+i+'" value="'+(G[i].importo||"")+'">'+
+      '<button class="del" data-rmg="'+i+'" aria-label="Togli '+esc(G[i].nome)+'">'+
+      '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+  }
+  $("goalList").innerHTML = out ||
+    '<p class="hint" style="margin:0">Nessun obiettivo. Scrivine uno qui sotto: vacanze, anticipo mutuo, auto\u2026</p>';
+}
+
 function chips(elId, listName){
   var arr=db.settings[listName], out="", i;
   for(i=0;i<arr.length;i++)
@@ -768,7 +866,8 @@ function go(v){
     if(btns[i].getAttribute("data-v")===v) btns[i].setAttribute("aria-current","page");
     else btns[i].removeAttribute("aria-current");
   }
-  $("fab").style.display = (v==="set") ? "none" : "grid";
+  $("fab").style.display = (v==="set" || (v==="pat" && $("patBody").hidden)) ? "none" : "grid";
+  $("fab").setAttribute("aria-label", v==="pat" ? "Aggiungi un asset" : "Aggiungi un movimento");
   window.scrollTo(0,0);
   refresh();
 }
@@ -777,7 +876,7 @@ function refresh(){
   checkBackup();
   if(view==="mov") renderMov();
   if(view==="fisse") renderFisse();
-  if(view==="anno") renderAnno();
+  if(view==="pat"){ if($("patBody").hidden) renderAnno(); else renderPat(); }
   if(view==="set") renderSet();
 }
 document.querySelector(".nav").addEventListener("click", function(e){
@@ -814,8 +913,10 @@ function openSheet(){
 function closeSheet(){
   $("scrim").classList.remove("on"); $("sheet").classList.remove("on");
 }
-$("fab").addEventListener("click", openSheet);
-$("scrim").addEventListener("click", closeSheet);
+$("fab").addEventListener("click", function(){
+  if(view==="pat") openAsset(null); else openSheet();
+});
+$("scrim").addEventListener("click", function(){ closeSheet(); closeAsset(); });
 $("kindCtl").addEventListener("click", function(e){
   var b=e.target.closest("button[data-k]"); if(!b) return;
   kind=b.getAttribute("data-k");
@@ -828,6 +929,35 @@ function opts(arr, sel){
     o+='<option'+(arr[i]===sel?" selected":"")+'>'+esc(arr[i])+'</option>';
   return o;
 }
+var NEWOPT='<option value="__new">\uff0b Nuova voce\u2026</option>';
+/* campo a tendina che permette anche di scrivere una voce nuova */
+function selField(label, id, list, inner){
+  return '<label class="f"><span>'+label+'</span>'+
+    '<select id="'+id+'" data-list="'+list+'">'+inner+NEWOPT+'</select>'+
+    '<input id="'+id+'_new" class="newin" placeholder="Scrivi il nome e salva" hidden></label>';
+}
+/* legge il valore, registrando la voce nuova nella lista */
+function fieldVal(id){
+  var sel=$(id); if(!sel) return "";
+  if(sel.value!=="__new") return sel.value;
+  var v=$(id+"_new").value.trim();
+  if(!v) return "";
+  var list=sel.getAttribute("data-list");
+  if(list && db.settings[list] && db.settings[list].indexOf(v)<0){ db.settings[list].push(v); persist(db); }
+  return v;
+}
+/* elenco per i risparmi: prima gli obiettivi, poi le altre destinazioni */
+function risInner(){
+  var G=db.settings.obiettivi||[], A=db.settings.asset||[], o="", i, names={};
+  if(G.length){
+    o+='<optgroup label="I tuoi obiettivi">';
+    for(i=0;i<G.length;i++){ names[G[i].nome]=1; o+='<option>'+esc(G[i].nome)+'</option>'; }
+    o+='</optgroup>';
+  }
+  o+='<optgroup label="Altre destinazioni">';
+  for(i=0;i<A.length;i++) if(!names[A[i]]) o+='<option>'+esc(A[i])+'</option>';
+  return o+'</optgroup>';
+}
 function defDate(){
   var isNow=(cur.y===today.getFullYear()&&cur.m===today.getMonth());
   var d=isNow?today.getDate():1;
@@ -839,23 +969,29 @@ function buildForm(){
   if(kind==="uscita"){
     $("sheetTitle").textContent="Nuova uscita";
     h+='<label class="f"><span>Per cosa</span><input id="fWhat" placeholder="Es. spesa al supermercato"></label>'+
-       '<div class="two"><label class="f"><span>Categoria</span><select id="fCat">'+opts(s.categorie)+'</select></label>'+
-       '<label class="f"><span>Pagato con</span><select id="fMod">'+opts(s.modalita)+'</select></label></div>'+
+       selField("Categoria","fCat","categorie",opts(s.categorie))+
+       selField("Pagato con","fMod","modalita",opts(s.modalita))+
        '<label class="f"><span>Era una spesa necessaria?</span><select id="fEss"><option value="1">Sì, essenziale</option><option value="0">No, ci potevo rinunciare</option></select></label>';
   } else if(kind==="entrata"){
     $("sheetTitle").textContent="Nuova entrata";
-    h+='<label class="f"><span>Da dove arriva</span><select id="fSrc">'+opts(s.fonti)+'</select></label>';
+    h+=selField("Da dove arriva","fSrc","fonti",opts(s.fonti));
   } else if(kind==="bolletta"){
     $("sheetTitle").textContent="Bolletta pagata";
     var names=[],i; for(i=0;i<s.bollette.length;i++) names.push(s.bollette[i].nome);
     h+='<label class="f"><span>Quale</span><select id="fBill">'+opts(names)+'</select></label>';
   } else {
     $("sheetTitle").textContent="Messo da parte";
-    h+='<label class="f"><span>Dove l\'hai messo</span><input id="fAsset" placeholder="Es. conto deposito"></label>'+
-       '<label class="f"><span>A cosa serve</span><select id="fRcat">'+opts(s.asset)+'</select></label>';
+    h+='<label class="f"><span>Come lo chiami</span><input id="fAsset" placeholder="Es. ETF World, libretto postale"></label>'+
+       selField("A cosa serve","fRcat","asset",risInner());
   }
   h+='<label class="f"><span>Data</span><input type="date" id="fDate" value="'+defDate()+'"></label>';
   $("formBody").innerHTML=h;
+  $("formBody").addEventListener("change", function(e){
+    var sel=e.target; if(sel.tagName!=="SELECT") return;
+    var inp=$(sel.id+"_new"); if(!inp) return;
+    inp.hidden = sel.value!=="__new";
+    if(!inp.hidden) inp.focus();
+  });
   setTimeout(function(){ var a=$("fAmt"); if(a) a.focus(); },240);
 }
 $("saveMov").addEventListener("click", function(){
@@ -865,20 +1001,33 @@ $("saveMov").addEventListener("click", function(){
   var y=+date.slice(0,4), m=+date.slice(5,7)-1;
   var b=bucket(y,m);
   if(kind==="uscita"){
-    b.uscite.push({importo:amt, cosa:$("fWhat").value.trim(), categoria:$("fCat").value,
-      modalita:$("fMod").value, essenziale:$("fEss").value==="1", data:date});
+    var c1=fieldVal("fCat"), m1=fieldVal("fMod");
+    if(!c1||!m1){ toast("Scrivi il nome della voce nuova"); return; }
+    b.uscite.push({importo:amt, cosa:$("fWhat").value.trim(), categoria:c1,
+      modalita:m1, essenziale:$("fEss").value==="1", data:date});
   } else if(kind==="entrata"){
-    b.entrate.push({importo:amt, fonte:$("fSrc").value, data:date});
+    var f1=fieldVal("fSrc");
+    if(!f1){ toast("Scrivi il nome della voce nuova"); return; }
+    b.entrate.push({importo:amt, fonte:f1, data:date});
   } else if(kind==="bolletta"){
     b.bollette.push({importo:amt, categoria:$("fBill").value, data:date});
   } else {
-    b.riserva.push({importo:amt, asset:$("fAsset").value.trim()||$("fRcat").value,
-      categoria:$("fRcat").value, data:date});
+    var r1=fieldVal("fRcat");
+    if(!r1){ toast("Scrivi a cosa serve questo risparmio"); return; }
+    b.riserva.push({importo:amt, asset:$("fAsset").value.trim()||r1,
+      categoria:r1, data:date});
   }
   save(); cur.y=y; cur.m=m; closeSheet(); refresh(); toast("Aggiunto");
 });
 
 /* ============================ impostazioni ============================ */
+document.addEventListener("input", function(e){
+  var gi=e.target.getAttribute && e.target.getAttribute("data-gi");
+  if(gi===null || gi===undefined) return;
+  db.settings.obiettivi[+gi].importo = num(e.target.value);
+  save(); renderMonth();
+});
+
 function bindText(id, field, isNum){
   $(id).addEventListener("input", function(){
     db.settings[field] = isNum ? num(this.value) : this.value;
@@ -886,8 +1035,7 @@ function bindText(id, field, isNum){
   });
 }
 bindText("sName","nome"); bindText("sPhrase","frase");
-bindText("sEmg","emergenza",true); bindText("sGoalN","obiettivoNome");
-bindText("sGoalA","obiettivoImporto",true);
+bindText("sEmg","emergenza",true);
 
 document.addEventListener("click", function(e){
   var add=e.target.closest("button[data-add]");
@@ -911,6 +1059,23 @@ document.addEventListener("click", function(e){
     if(db.settings[list].length<=1){ toast("Devi lasciarne almeno una"); return; }
     db.settings[list].splice(+rm.getAttribute("data-i"),1);
     save(); renderSet(); return;
+  }
+  var ag=e.target.closest("button[data-addgoal]");
+  if(ag){
+    var gn=$("iGoalN").value.trim();
+    if(!gn){ toast("Dai un nome all\u2019obiettivo"); return; }
+    if(!db.settings.obiettivi) db.settings.obiettivi=[];
+    db.settings.obiettivi.push({nome:gn, importo:num($("iGoalA").value)});
+    $("iGoalN").value=""; $("iGoalA").value="";
+    save(); renderGoalList(); renderMonth(); toast("Obiettivo aggiunto");
+    return;
+  }
+  var rg=e.target.closest("button[data-rmg]");
+  if(rg){
+    var gi=+rg.getAttribute("data-rmg"), nm=db.settings.obiettivi[gi].nome;
+    if(!confirm("Tolgo l\u2019obiettivo \u201c"+nm+"\u201d? I risparmi gi\u00e0 registrati restano nel registro.")) return;
+    db.settings.obiettivi.splice(gi,1);
+    save(); renderGoalList(); renderMonth(); return;
   }
   var rmb=e.target.closest("button[data-rmb]");
   if(rmb){ db.settings.bollette.splice(+rmb.getAttribute("data-rmb"),1); save(); renderSet(); }
@@ -986,6 +1151,228 @@ $("wipe").addEventListener("click", function(){
   if(!confirm("Cancello tutti i movimenti e le impostazioni? Non si torna indietro.")) return;
   db=JSON.parse(JSON.stringify(DEFAULTS)); save(); renderSet(); refresh(); toast("Tutto cancellato");
 });
+
+/* ================================================================
+   PATRIMONIO
+   Quanto vale quello che possiedi, diviso per tipo, con lo storico
+   di ogni aggiornamento e il rendimento rispetto a quanto hai versato.
+   ================================================================ */
+var PCATS=[
+  {n:"Investimenti", c:"#3A6DD0", s:"IN"},
+  {n:"Risparmi",     c:"#1E9E6A", s:"RI"},
+  {n:"Liquidit\u00e0",     c:"#7A8EA8", s:"LI"},
+  {n:"Beni e altri asset", c:"#B08968", s:"BE"},
+  {n:"Crypto",       c:"#9B59D0", s:"CR"},
+  {n:"Debiti",       c:"#C8443C", s:"DE"}
+];
+function pcat(n){
+  for(var i=0;i<PCATS.length;i++) if(PCATS[i].n===n) return PCATS[i];
+  return {n:n,c:"#7A8EA8",s:"--"};
+}
+function isDebt(n){ return n==="Debiti"; }
+function assets(){
+  if(!db.patrimonio) db.patrimonio={assets:[]};
+  if(!db.patrimonio.assets) db.patrimonio.assets=[];
+  return db.patrimonio.assets;
+}
+function isoToday(){
+  var d=new Date();
+  return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
+}
+/* valore di un asset a una certa data (l'ultimo aggiornamento fino a quel giorno) */
+function valAt(a, date){
+  var h=a.storico||[], v=null, i;
+  for(i=0;i<h.length;i++){ if(!date || h[i].d<=date) v=+h[i].v||0; }
+  return v;
+}
+function valNow(a){ var h=a.storico||[]; return h.length ? (+h[h.length-1].v||0) : 0; }
+function signed(a, v){ return isDebt(a.cat) ? -v : v; }
+function totalAt(date){
+  var A=assets(), t=0, i, v;
+  for(i=0;i<A.length;i++){ v=valAt(A[i],date); if(v!==null) t+=signed(A[i],v); }
+  return t;
+}
+function allDates(){
+  var A=assets(), set={}, i, j;
+  for(i=0;i<A.length;i++){ var h=A[i].storico||[]; for(j=0;j<h.length;j++) set[h[j].d]=1; }
+  return Object.keys(set).sort();
+}
+function shiftMonths(iso, n){
+  var y=+iso.slice(0,4), m=+iso.slice(5,7)-1, d=+iso.slice(8,10);
+  var dt=new Date(y, m+n, d);
+  return dt.getFullYear()+"-"+("0"+(dt.getMonth()+1)).slice(-2)+"-"+("0"+dt.getDate()).slice(-2);
+}
+function dLabel(iso){ return iso.slice(8,10)+"/"+iso.slice(5,7)+"/"+iso.slice(2,4); }
+
+/* ---------- grafico dell'andamento ---------- */
+function sparkline(dates){
+  if(dates.length<2)
+    return '<div class="msg">Il grafico compare dopo il secondo aggiornamento: serve almeno una variazione per disegnare una linea.</div>';
+  var vals=dates.map(totalAt);
+  var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
+  if(max===min){ max=min+1; }
+  var W=320, H=120, pad=6, i;
+  var xs=dates.map(function(d,k){ return pad + k*(W-pad*2)/(dates.length-1); });
+  var ys=vals.map(function(v){ return H-pad - (v-min)/(max-min)*(H-pad*2); });
+  var line="", area="M"+xs[0].toFixed(1)+" "+H;
+  for(i=0;i<xs.length;i++){
+    line += (i?" L":"M")+xs[i].toFixed(1)+" "+ys[i].toFixed(1);
+    area += " L"+xs[i].toFixed(1)+" "+ys[i].toFixed(1);
+  }
+  area += " L"+xs[xs.length-1].toFixed(1)+" "+H+" Z";
+  return '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true">'+
+    '<defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0%" stop-color="#F0B429" stop-opacity=".34"/>'+
+    '<stop offset="100%" stop-color="#F0B429" stop-opacity="0"/></linearGradient></defs>'+
+    '<path d="'+area+'" fill="url(#pg)"/>'+
+    '<path d="'+line+'" fill="none" stroke="#F0B429" stroke-width="2" '+
+    'stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>'+
+    '<circle cx="'+xs[xs.length-1].toFixed(1)+'" cy="'+ys[ys.length-1].toFixed(1)+'" r="3.2" fill="#F0B429" '+
+    'vector-effect="non-scaling-stroke"/></svg>';
+}
+
+function renderPat(){
+  var A=assets(), i, today=isoToday();
+  var tot=totalAt(null);
+  $("pTot").textContent=eur(tot);
+  $("pTot").className="g-big num"+(tot<0?" neg":"");
+
+  /* variazione rispetto a un mese fa */
+  var dates=allDates();
+  var el=$("pDelta");
+  if(dates.length){
+    var prev=totalAt(shiftMonths(today,-1)), d=tot-prev;
+    el.innerHTML = prev===0
+      ? "Primo dato registrato il "+dLabel(dates[0])+"."
+      : '<b class="'+(d>=0?"up":"dn")+'">'+(d>=0?"\u25b2 ":"\u25bc ")+eurShort(Math.abs(d))+
+        '</b> rispetto a un mese fa';
+  } else el.textContent="Aggiungi il primo asset per iniziare.";
+
+  $("pChart").innerHTML=sparkline(dates);
+
+  /* versato e rendimento (i debiti restano fuori) */
+  var vers=0, val=0;
+  for(i=0;i<A.length;i++){ if(isDebt(A[i].cat)) continue; vers+=(+A[i].versato||0); val+=valNow(A[i]); }
+  var gain=val-vers;
+  $("pFoot").innerHTML = vers>0
+    ? '<span>Versato <b>'+eurShort(vers)+'</b></span><span>Rendimento <b class="'+(gain>=0?"up":"dn")+'">'+
+      (gain>=0?"+":"\u2212")+eurShort(Math.abs(gain))+' ('+(gain>=0?"+":"\u2212")+Math.abs(gain/vers*100).toFixed(1).replace(".",",")+'%)</b></span>'
+    : '<span>Compila \u201cquanto ci hai messo\u201d negli asset per vedere il rendimento.</span>';
+
+  /* per categoria */
+  var map={}, out="";
+  for(i=0;i<A.length;i++){ map[A[i].cat]=(map[A[i].cat]||0)+valNow(A[i]); }
+  var pos=0;
+  for(i=0;i<PCATS.length;i++) if(!isDebt(PCATS[i].n)) pos+=(map[PCATS[i].n]||0);
+  for(i=0;i<PCATS.length;i++){
+    var C=PCATS[i], v=map[C.n]; if(!v) continue;
+    var share = isDebt(C.n) ? null : (pos>0 ? v/pos*100 : 0);
+    out+='<div class="cat"><div class="cat-h"><div class="n">'+esc(C.n)+'</div>'+
+      '<div class="v">'+(isDebt(C.n)?"\u2212 ":"")+eur(v)+
+      (share===null?"":'<em>'+Math.round(share)+'%</em>')+'</div></div>'+
+      '<div class="cbar"><i style="width:'+(pos>0?Math.min(100,v/pos*100):0)+'%;background:'+C.c+'"></i></div></div>';
+  }
+  $("pCats").innerHTML = out || '<div class="empty"><p>Nessun asset ancora.</p></div>';
+
+  /* elenco asset */
+  var sorted=A.slice().sort(function(a,b){ return valNow(b)-valNow(a); });
+  out="";
+  for(i=0;i<sorted.length;i++){
+    var a=sorted[i], C=pcat(a.cat), v=valNow(a), h=a.storico||[];
+    var pv = h.length>1 ? (+h[h.length-2].v||0) : null;
+    var d = pv===null ? null : v-pv;
+    var cls = d===null ? "flat" : (d>0?"up":(d<0?"dn":"flat"));
+    var dtxt = d===null ? "primo valore" : (d===0 ? "invariato" :
+      (d>0?"\u25b2 ":"\u25bc ")+eurShort(Math.abs(d)));
+    out+='<div class="arow" data-aid="'+esc(a.id)+'" role="button" tabindex="0">'+
+      '<span class="ic" style="background:'+C.c+'">'+C.s+'</span>'+
+      '<div class="main"><div class="a">'+esc(a.nome)+'</div>'+
+      '<div class="b">'+esc(a.cat)+(h.length?' \u00b7 agg. '+dLabel(h[h.length-1].d):'')+'</div></div>'+
+      '<div class="r"><div class="v">'+(isDebt(a.cat)?"\u2212 ":"")+eur(v)+'</div>'+
+      '<div class="d '+cls+'">'+dtxt+'</div></div></div>';
+  }
+  $("pAssets").innerHTML = out ||
+    '<div class="empty"><div class="big">Nessun asset</div><p>Tocca + per aggiungere il primo: un conto, un ETF, un immobile, un debito.</p></div>';
+
+  /* contesto: quanto hai messo da parte nell'anno dal registro mensile */
+  var year=cumulato(cur.y,11,null);
+  $("pHint").textContent = year>0
+    ? "Nel "+cur.y+" hai messo da parte "+eur(year)+" secondo il registro mensile. Ricordati di aggiornare gli asset qui sopra."
+    : "Tocca un asset per aggiornarne il valore: ogni aggiornamento diventa un punto del grafico.";
+}
+
+/* ---------- foglio dell'asset ---------- */
+var editId=null;
+function openAsset(id){
+  editId=id||null;
+  var sel=$("aCat"), o="", i;
+  for(i=0;i<PCATS.length;i++) o+='<option>'+esc(PCATS[i].n)+'</option>';
+  sel.innerHTML=o;
+  var a=null, A=assets();
+  for(i=0;i<A.length;i++) if(A[i].id===editId) a=A[i];
+  if(a){
+    $("aTitle").textContent=a.nome;
+    $("aName").value=a.nome; sel.value=a.cat;
+    $("aVal").value=String(valNow(a)).replace(".",",");
+    $("aVers").value=a.versato ? String(a.versato).replace(".",",") : "";
+    var h=a.storico||[], last=h.slice(-4).reverse().map(function(p){
+      return dLabel(p.d)+" \u2192 "+eur(p.v); }).join(" \u00b7 ");
+    $("aHist").textContent = h.length>1 ? "Ultimi aggiornamenti: "+last : "Scrivi il valore di oggi: verr\u00e0 registrato con la data odierna.";
+    $("aDel").style.display="block";
+  } else {
+    $("aTitle").textContent="Nuovo asset";
+    $("aName").value=""; sel.selectedIndex=0; $("aVal").value=""; $("aVers").value="";
+    $("aHist").textContent="Ogni volta che aggiorni il valore, l\u2019app tiene la data: \u00e8 cos\u00ec che nasce il grafico.";
+    $("aDel").style.display="none";
+  }
+  $("scrim").classList.add("on"); $("asheet").classList.add("on");
+}
+function closeAsset(){ $("scrim").classList.remove("on"); $("asheet").classList.remove("on"); }
+
+$("aSave").addEventListener("click", function(){
+  var nome=$("aName").value.trim();
+  if(!nome){ toast("Dai un nome all\u2019asset"); $("aName").focus(); return; }
+  var v=num($("aVal").value), vers=$("aVers").value.trim()==="" ? null : num($("aVers").value);
+  var A=assets(), a=null, i, today=isoToday();
+  for(i=0;i<A.length;i++) if(A[i].id===editId) a=A[i];
+  if(!a){
+    a={id:"a"+Date.now()+Math.floor(Math.random()*999), nome:nome, cat:$("aCat").value, versato:vers||0, storico:[]};
+    A.push(a);
+  } else {
+    a.nome=nome; a.cat=$("aCat").value;
+    if(vers!==null) a.versato=vers;
+  }
+  var h=a.storico;
+  if(h.length && h[h.length-1].d===today) h[h.length-1].v=v;
+  else if(!h.length || (+h[h.length-1].v||0)!==v) h.push({d:today, v:v});
+  save(); closeAsset(); renderPat();
+  toast(editId ? "Valore aggiornato" : "Asset aggiunto");
+});
+$("aDel").addEventListener("click", function(){
+  if(!editId) return;
+  if(!confirm("Elimino questo asset e tutto il suo storico?")) return;
+  var A=assets(), i;
+  for(i=0;i<A.length;i++) if(A[i].id===editId){ A.splice(i,1); break; }
+  save(); closeAsset(); renderPat(); toast("Asset eliminato");
+});
+$("pAssets").addEventListener("click", function(e){
+  var r=e.target.closest(".arow[data-aid]"); if(r) openAsset(r.getAttribute("data-aid"));
+});
+$("pAssets").addEventListener("keydown", function(e){
+  if(e.key!=="Enter" && e.key!==" ") return;
+  var r=e.target.closest(".arow[data-aid]"); if(r){ e.preventDefault(); openAsset(r.getAttribute("data-aid")); }
+});
+$("patTabs").addEventListener("click", function(e){
+  var b=e.target.closest("button[data-p]"); if(!b) return;
+  var all=this.querySelectorAll("button"), i;
+  for(i=0;i<all.length;i++) all[i].setAttribute("aria-pressed", all[i]===b?"true":"false");
+  var isPat = b.getAttribute("data-p")==="pat";
+  $("patBody").hidden=!isPat; $("annoBody").hidden=isPat;
+  $("fab").style.display = isPat ? "grid" : "none";
+  if(isPat) renderPat(); else renderAnno();
+  window.scrollTo(0,0);
+});
+
 
 /* ================================================================
    SALVATAGGIO SU FILE .xlsx
@@ -1146,7 +1533,9 @@ function buildWorkbook(){
   rows.push([]);
   rows.push([{v:"OBIETTIVI",s:S_TOT}]);
   rows.push([T("Riserva d'emergenza"), N(cumulato(y,11,"Riserva d'emergenza")), T("su"), N(db.settings.emergenza)]);
-  rows.push([T(db.settings.obiettivoNome||"Obiettivo"), N(cumulato(y,11,"Obiettivo")), T("su"), N(db.settings.obiettivoImporto)]);
+  var GG=db.settings.obiettivi||[];
+  for(i=0;i<GG.length;i++)
+    rows.push([T(GG[i].nome), N(cumulato(y,11,GG[i].nome)), T("su"), N(GG[i].importo)]);
   sheets.push({name:"Riepilogo "+y, xml:sheetXml(rows,[20,16,16,18,16])});
 
   /* --- foglio 2: tutti i movimenti --- */
@@ -1165,6 +1554,29 @@ function buildWorkbook(){
       T(b.riserva[j].asset),T(b.riserva[j].categoria),T(""),T(""),N(b.riserva[j].importo)]);
   }
   sheets.push({name:"Movimenti", xml:sheetXml(rows,[12,16,16,26,20,16,12,14])});
+
+  /* --- foglio 3: patrimonio, con lo storico di ogni asset --- */
+  var A=assets();
+  rows=[[H("ASSET"),H("TIPO"),H("VALORE OGGI"),H("VERSATO"),H("RENDIMENTO"),H("AGGIORNATO IL")]];
+  var pv=0, pver=0;
+  for(i=0;i<A.length;i++){
+    var a=A[i], v=valNow(a), ve=+a.versato||0, h=a.storico||[];
+    if(!isDebt(a.cat)){ pv+=v; pver+=ve; }
+    rows.push([T(a.nome), T(a.cat), N(isDebt(a.cat)?-v:v), N(ve),
+               N(isDebt(a.cat)?0:v-ve), h.length?D(h[h.length-1].d):null]);
+  }
+  rows.push([{v:"TOTALE",s:S_TOT}, T(""), N(totalAt(null),S_TOTEUR), N(pver,S_TOTEUR), N(pv-pver,S_TOTEUR)]);
+  rows.push([]);
+  rows.push([{v:"STORICO DEGLI AGGIORNAMENTI",s:S_TOT}]);
+  rows.push([H("DATA"),H("ASSET"),H("VALORE")]);
+  var hist=[];
+  for(i=0;i<A.length;i++){
+    var hh=A[i].storico||[];
+    for(j=0;j<hh.length;j++) hist.push({d:hh[j].d, n:A[i].nome, v:hh[j].v});
+  }
+  hist.sort(function(x,y){ return x.d<y.d?-1:(x.d>y.d?1:0); });
+  for(i=0;i<hist.length;i++) rows.push([D(hist[i].d), T(hist[i].n), N(hist[i].v)]);
+  sheets.push({name:"Patrimonio", xml:sheetXml(rows,[26,20,16,14,16,16])});
 
   /* --- foglio 3 (nascosto): i dati veri, per riaprire il file nell'app --- */
   var json=JSON.stringify(db), chunks=[], CH=25000;
