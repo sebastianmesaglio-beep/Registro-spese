@@ -3,7 +3,7 @@
    mai nessun server esterno (i caratteri sono incorporati in index.html).
    Se modifichi index.html, cambia il numero di CACHE qui sotto. */
 
-var CACHE = "registro-v4";
+var CACHE = "registro-v5";
 var FILES = [
   "./",
   "./index.html",
