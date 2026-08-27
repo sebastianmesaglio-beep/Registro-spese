@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
-<meta name="theme-color" content="#090E16">
+<meta name="theme-color" content="#F7F8FA">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Registro">
 <title>Registro &mdash; budget mensile</title>
 <link rel="manifest" href="./manifest.webmanifest">
@@ -274,28 +274,31 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 :focus-visible{outline:2.5px solid var(--ocra);outline-offset:2px}
 
 /* ================================================================
-   TEMA SCURO
-   Sovrascrive i colori chiari definiti sopra. Un solo fondo per
-   tutta la pagina, sezioni separate da filetti invece che da schede.
+   TEMA CHIARO
+   Fondo unico appena grigio, testo inchiostro, sezioni separate da
+   filetti. Nessuna scheda che galleggia, nessuna ombra pesante.
    ================================================================ */
 :root{
-  --bg:#090E16;
-  --surf:#121A25;
-  --rule:#212B39;
-  --txt:#FFFFFF;
-  --mute:#7F91A7;
-  --faint:#566578;
+  --bg:#F7F8FA;
+  --surf:#FFFFFF;
+  --rule:#E4E7EC;
+  --txt:#101823;
+  --mute:#66768A;
+  --faint:#95A2B2;
   --ocra:#F0B429;
-  --spesa:#4D8DF6;
-  --risparmio:#34C78C;
-  --allerta:#FF6B60;
-  --paper:#090E16;
-  --card:#121A25;
-  --ink:#090E16;
+  --ocra-t:#B07F06;      /* ocra leggibile sul chiaro */
+  --spesa:#2F6FE4;
+  --risparmio:#0E9F6E;
+  --allerta:#DC3B32;
+  --paper:#F7F8FA;
+  --card:#FFFFFF;
+  --ink:#101823;
+  --wash:rgba(16,24,35,.055);
+  --wash-2:rgba(16,24,35,.11);
 }
 html{background:var(--bg);overscroll-behavior-y:none}
 body{background:var(--bg);color:var(--txt)}
-::selection{background:rgba(240,180,41,.3)}
+::selection{background:rgba(240,180,41,.35)}
 
 /* ---------- intestazione che si ritrae ---------- */
 .top{
@@ -306,9 +309,7 @@ body{background:var(--bg);color:var(--txt)}
 }
 .top.compact{border-bottom-color:var(--rule);padding-bottom:8px}
 .greet{
-  overflow:hidden;
-  max-height:56px;opacity:1;
-  transform:translateY(0);
+  overflow:hidden;max-height:56px;opacity:1;transform:translateY(0);
   transition:max-height .3s cubic-bezier(.4,0,.2,1), opacity .2s ease,
              transform .3s cubic-bezier(.4,0,.2,1), margin .3s cubic-bezier(.4,0,.2,1);
   margin-bottom:6px;
@@ -322,7 +323,7 @@ body{background:var(--bg);color:var(--txt)}
 .monthrow{display:flex;align-items:center;gap:6px}
 .mlabel{
   flex:1;min-width:0;text-align:left;font-weight:600;
-  font-size:29px;letter-spacing:-.02em;line-height:1.15;
+  font-size:29px;letter-spacing:-.025em;line-height:1.15;color:var(--txt);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   transition:font-size .28s cubic-bezier(.4,0,.2,1);
 }
@@ -330,15 +331,15 @@ body{background:var(--bg);color:var(--txt)}
 .mlabel small{display:inline;font-size:.66em;font-weight:400;color:var(--faint);margin-left:.34em;letter-spacing:0}
 .marrow{
   width:34px;height:34px;flex:none;border-radius:11px;color:var(--mute);
-  display:grid;place-items:center;background:rgba(255,255,255,.06);
+  display:grid;place-items:center;background:var(--wash);
   transition:width .28s cubic-bezier(.4,0,.2,1), height .28s cubic-bezier(.4,0,.2,1);
 }
-.marrow:active{background:rgba(255,255,255,.16);color:var(--txt)}
+.marrow:active{background:var(--wash-2);color:var(--txt)}
 .top.compact .marrow{width:30px;height:30px}
 
 .savebtn{
   flex:none;display:flex;align-items:center;gap:7px;height:34px;padding:0 12px;
-  border-radius:11px;background:rgba(255,255,255,.06);color:var(--mute);
+  border-radius:11px;background:var(--wash);color:var(--mute);
   font-size:12.5px;font-weight:600;overflow:hidden;
   transition:padding .28s cubic-bezier(.4,0,.2,1), width .28s cubic-bezier(.4,0,.2,1),
              height .28s cubic-bezier(.4,0,.2,1), background .2s ease;
@@ -346,7 +347,7 @@ body{background:var(--bg);color:var(--txt)}
 .savebtn i{width:8px;height:8px;border-radius:50%;background:var(--risparmio);
   display:block;flex:none;transition:background .25s ease}
 .savebtn span{white-space:nowrap;transition:opacity .18s ease}
-.savebtn.dirty{background:rgba(240,180,41,.16);color:var(--ocra)}
+.savebtn.dirty{background:rgba(240,180,41,.2);color:var(--ocra-t)}
 .savebtn.dirty i{background:var(--ocra)}
 .top.compact .savebtn{width:30px;height:30px;padding:0;justify-content:center;background:transparent}
 .top.compact .savebtn span{opacity:0;width:0;overflow:hidden}
@@ -366,17 +367,17 @@ main{padding:0 var(--pad) 8px}
 .arow{padding:11px 0}
 
 /* ---------- il numero eroe ---------- */
-.gauge{background:transparent;border-radius:0;padding:18px 0 4px;margin:0}
+.gauge{background:transparent;border-radius:0;padding:18px 0 4px;margin:0;color:var(--txt)}
 .gauge .eyebrow{color:var(--faint);letter-spacing:.13em;font-size:10.5px}
-.g-big{font-size:44px;margin:6px 0 0;letter-spacing:-.035em}
+.g-big{font-size:44px;margin:6px 0 0;letter-spacing:-.04em;color:var(--txt)}
 .g-big.neg{color:var(--allerta)}
-.bar{height:22px;border-radius:7px;background:rgba(255,255,255,.08);margin:20px 0 0}
+.bar{height:22px;border-radius:7px;background:var(--wash);margin:20px 0 0}
 .today::after{top:-4px;left:-3.5px;width:9px;height:9px}
 .legend{gap:8px 16px;color:var(--mute);margin-top:14px;font-size:12px}
 .legend i{width:8px;height:8px;border-radius:50%}
 .legend b{color:var(--txt)}
 .pace{border-top:0;padding-top:0;margin-top:9px;color:var(--faint);font-size:12.5px}
-.pace b{color:var(--ocra)}
+.pace b{color:var(--ocra-t)}
 .pace.over b{color:var(--allerta)}
 
 /* ---------- tre numeri in fila ---------- */
@@ -393,10 +394,9 @@ main{padding:0 var(--pad) 8px}
 /* ---------- obiettivi ---------- */
 .goal + .goal{border-top:0;margin-top:20px;padding-top:0}
 .goal-h .t{font-size:14.5px;color:var(--txt)}
-.goal-h .p{color:var(--ocra);font-size:12.5px}
-.track{height:6px;border-radius:3px;background:rgba(255,255,255,.09);margin:10px 0 8px}
-.fill{background:var(--ocra)}
-.fill.ocra{background:var(--ocra)}
+.goal-h .p{color:var(--ocra-t);font-size:12.5px}
+.track{height:6px;border-radius:3px;background:var(--wash);margin:10px 0 8px}
+.fill,.fill.ocra{background:var(--ocra)}
 .goal-f{font-size:11px;color:var(--faint)}
 
 /* ---------- righe e barre ---------- */
@@ -404,85 +404,81 @@ main{padding:0 var(--pad) 8px}
 .row .main .b{color:var(--faint);font-size:11.5px}
 .row .amt{color:var(--txt)}
 .row .del{color:var(--faint)}
-.row .del:active{background:rgba(255,255,255,.08);color:var(--allerta)}
-.tag{background:rgba(255,255,255,.08);color:var(--mute)}
-.tag.no{background:rgba(255,107,96,.16);color:var(--allerta)}
-.tag.si{background:rgba(52,199,140,.16);color:var(--risparmio)}
+.row .del:active{background:var(--wash);color:var(--allerta)}
+.tag{background:var(--wash);color:var(--mute)}
+.tag.no{background:rgba(220,59,50,.11);color:var(--allerta)}
+.tag.si{background:rgba(14,159,110,.13);color:var(--risparmio)}
 .cat{border-top:0;padding:0 0 16px}
 .cat-h{font-size:13.5px;margin-bottom:8px}
-.cat-h .n{color:var(--txt)}
-.cat-h .v{color:var(--txt)}
+.cat-h .n,.cat-h .v{color:var(--txt)}
 .cat-h .v em{color:var(--faint);font-size:11px}
-.cbar{height:5px;border-radius:2.5px;background:rgba(255,255,255,.09)}
+.cbar{height:5px;border-radius:2.5px;background:var(--wash)}
 .cbar>i{background:var(--spesa)}
-.bill .nm{color:var(--txt)}
-.bill .nm small{color:var(--faint)}
-.bill .rl{color:var(--txt)}
-.bill .md{color:var(--faint)}
+.bill .nm,.bill .rl{color:var(--txt)}
+.bill .nm small,.bill .md{color:var(--faint)}
 .ym{border-top:0;padding:8px 0}
 .ym .mn{color:var(--faint)}
-.ym.now .mn{color:var(--txt)}
-.ym .sd{color:var(--txt)}
+.ym.now .mn,.ym .sd{color:var(--txt)}
 .ym .bars i{border-radius:3px}
-.arow .main .a{color:var(--txt)}
-.arow .main .b{color:var(--faint)}
-.arow .r .v{color:var(--txt)}
-.arow .r .d.flat{color:var(--faint)}
+.arow .main .a,.arow .r .v{color:var(--txt)}
+.arow .main .b,.arow .r .d.flat{color:var(--faint)}
 .grow{border-top:0;padding:8px 0}
 .grow .gn{color:var(--txt)}
 
 /* ---------- patrimonio ---------- */
-.hero{background:transparent;border-radius:0;padding:18px 0 4px;margin:0}
+.hero{background:transparent;border-radius:0;padding:18px 0 4px;margin:0;color:var(--txt)}
 .hero .eyebrow{color:var(--faint);letter-spacing:.13em;font-size:10.5px}
 .hero .g-big{font-size:40px}
 .pdelta{color:var(--faint);font-size:12.5px;margin-top:6px}
+.pdelta b.up{color:var(--risparmio)}.pdelta b.dn{color:var(--allerta)}
+.spark .msg{color:var(--faint)}
 .pfoot{border-top:1px solid var(--rule);color:var(--faint);padding-top:14px;margin-top:16px}
 .pfoot b{color:var(--txt)}
+.pfoot b.up{color:var(--risparmio)}.pfoot b.dn{color:var(--allerta)}
 
 /* ---------- controlli ---------- */
-.seg-ctl{background:rgba(255,255,255,.06);margin:16px 0 4px}
+.seg-ctl{background:var(--wash);margin:16px 0 4px}
 .seg-ctl button{color:var(--mute)}
-.seg-ctl button[aria-pressed=true]{background:rgba(255,255,255,.12);color:var(--txt);box-shadow:none}
+.seg-ctl button[aria-pressed=true]{background:#fff;color:var(--txt);
+  box-shadow:0 1px 2px rgba(16,24,35,.10),0 0 0 .5px rgba(16,24,35,.04)}
 input,select,textarea{background:var(--surf);border-color:var(--rule);color:var(--txt)}
 input::placeholder{color:var(--faint)}
-input:focus,select:focus{border-color:var(--ocra)}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237F91A7' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+input:focus,select:focus{border-color:var(--ocra);box-shadow:0 0 0 3px rgba(240,180,41,.18)}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2366768A' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 12px center;background-size:12px 8px;
   background-color:var(--surf);padding-right:34px}
 label.f>span{color:var(--faint);letter-spacing:.1em}
-.btn{background:var(--ocra);color:#0B1119}
-.btn:active{background:#D9A222}
-.btn.ghost{background:rgba(255,255,255,.08);color:var(--txt)}
-.btn.ghost:active{background:rgba(255,255,255,.16)}
-.btn.danger{background:rgba(255,107,96,.14);color:var(--allerta)}
-.chip{background:rgba(255,255,255,.07);color:var(--txt)}
+.btn{background:var(--txt);color:#fff}
+.btn:active{background:#243244}
+.btn.ghost{background:var(--wash);color:var(--txt)}
+.btn.ghost:active{background:var(--wash-2)}
+.btn.danger{background:rgba(220,59,50,.10);color:var(--allerta)}
+.chip{background:var(--wash);color:var(--txt)}
 .chip button{color:var(--faint)}
-.chip button:active{background:rgba(255,255,255,.14);color:var(--allerta)}
-.addline button{background:rgba(255,255,255,.12);color:var(--txt)}
-.hint{color:var(--faint)}
-.empty{color:var(--faint)}
+.chip button:active{background:var(--wash-2);color:var(--allerta)}
+.addline button{background:var(--txt);color:#fff}
+.hint,.empty,.store{color:var(--faint)}
 .empty .big{color:var(--txt)}
-.banner{background:rgba(240,180,41,.10);border-color:rgba(240,180,41,.45);color:var(--txt)}
-.banner .acts button{background:var(--ocra);color:#0B1119}
-.banner .acts button.b2{background:rgba(255,255,255,.10);color:var(--txt)}
-.store{color:var(--faint)}
+.banner{background:rgba(240,180,41,.12);border-color:rgba(240,180,41,.55);color:var(--txt)}
+.banner .acts button{background:var(--txt);color:#fff}
+.banner .acts button.b2{background:rgba(16,24,35,.07);color:var(--txt)}
 
 /* ---------- barra in basso, tasto +, fogli ---------- */
-.nav{background:rgba(10,16,24,.92);border-top:1px solid var(--rule)}
+.nav{background:rgba(247,248,250,.88);border-top:1px solid var(--rule)}
 .nav button{color:var(--faint)}
 .nav button[aria-current=page]{color:var(--txt)}
-.fab{background:var(--ocra);color:#0B1119;box-shadow:0 8px 24px rgba(240,180,41,.28)}
-.scrim{background:rgba(0,0,0,.62)}
-.sheet{background:#101823;color:var(--txt);
-  box-shadow:0 -1px 0 var(--rule)}
-.sheet h3{color:var(--txt)}
-.grab{background:rgba(255,255,255,.22)}
-.toast{background:#1E2A38;color:var(--txt);box-shadow:0 6px 20px rgba(0,0,0,.5)}
-.fab{transition:transform .26s cubic-bezier(.4,0,.2,1), opacity .18s ease, background .15s}
+.fab{background:var(--ocra);color:#20180A;
+  box-shadow:0 6px 18px rgba(240,180,41,.38),0 1px 3px rgba(16,24,35,.14);
+  transition:transform .26s cubic-bezier(.4,0,.2,1), opacity .18s ease, background .15s}
 .fab.away{transform:translateY(96px) scale(.85);opacity:0;pointer-events:none}
 .fab:active{transform:scale(.93)}
+.scrim{background:rgba(16,24,35,.42)}
+.sheet{background:#fff;color:var(--txt);box-shadow:0 -10px 40px rgba(16,24,35,.18)}
+.sheet h3{color:var(--txt)}
+.grab{background:var(--wash-2)}
+.toast{background:var(--txt);color:#fff;box-shadow:0 8px 24px rgba(16,24,35,.28)}
 body{padding-bottom:calc(112px + var(--safe-b))}
-:focus-visible{outline-color:var(--ocra)}
+:focus-visible{outline-color:var(--ocra-t)}
 
 </style>
 </head>
@@ -520,7 +516,7 @@ body{padding-bottom:calc(112px + var(--safe-b))}
       <div class="legend">
         <span><i style="background:#3A6DD0"></i>Uscite <b id="lgU">€0</b></span>
         <span><i style="background:#1E9E6A"></i>Da parte <b id="lgR">€0</b></span>
-        <span><i style="background:rgba(255,255,255,.22)"></i>Entrate <b id="lgE">€0</b></span>
+        <span><i style="background:#C3CAD4"></i>Entrate <b id="lgE">€0</b></span>
       </div>
       <div class="pace" id="pace"></div>
     </div>
